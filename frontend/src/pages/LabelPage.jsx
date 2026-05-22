@@ -127,9 +127,9 @@ export default function LabelPage() {
   const handleDownloadAsJpeg = () => {
     setMessage('');
     if (busy) return;
-    setBusy(true);
-    // schedule heavy work after paint so click handler returns immediately
+    // schedule busy state and heavy work after paint so the event handler returns immediately
     requestAnimationFrame(() => {
+      setBusy(true);
       downloadAsJpeg(previewRef, `courier-label-${format}`, { dpi, format })
         .then(() => setMessage('JPEG exported'))
         .catch((err) => { console.error('JPEG export failed', err); setMessage('JPEG export failed'); })
@@ -140,8 +140,8 @@ export default function LabelPage() {
   const handleDownloadAsPng = () => {
     setMessage('');
     if (busy) return;
-    setBusy(true);
     requestAnimationFrame(() => {
+      setBusy(true);
       downloadAsPng(previewRef, `courier-label-${format}`, { dpi, format })
         .then(() => setMessage('PNG exported'))
         .catch((err) => { console.error('PNG export failed', err); setMessage('PNG export failed'); })
@@ -152,8 +152,8 @@ export default function LabelPage() {
   const handleDownloadAsPdf = () => {
     setMessage('');
     if (busy) return;
-    setBusy(true);
     requestAnimationFrame(() => {
+      setBusy(true);
       downloadAsPdf(previewRef, 'courier-label', { dpi, format })
         .then(() => setMessage('PDF exported'))
         .catch((err) => { console.error('PDF export failed', err); setMessage('PDF export failed'); })
@@ -164,8 +164,8 @@ export default function LabelPage() {
   const handleDirectPrint = () => {
     setMessage('');
     if (busy) return;
-    setBusy(true);
     requestAnimationFrame(() => {
+      setBusy(true);
       try {
         directPrint(previewRef, { format });
         setMessage('Print dialog opened');
@@ -287,16 +287,16 @@ export default function LabelPage() {
             <div className="space-y-1">
               <div className="text-xs uppercase tracking-[0.3em] text-slate-400">Export Label</div>
               <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-                <button onClick={handleDownloadAsJpeg} className="inline-flex items-center justify-center gap-1 rounded-2xl border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800">
+                <button onClick={handleDownloadAsJpeg} disabled={busy} className={`inline-flex items-center justify-center gap-1 rounded-2xl border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 ${busy ? 'opacity-50 cursor-not-allowed' : ''}`}>
                   <ImageIcon size={14} /> JPEG
                 </button>
-                <button onClick={handleDownloadAsPng} className="inline-flex items-center justify-center gap-1 rounded-2xl border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800">
+                <button onClick={handleDownloadAsPng} disabled={busy} className={`inline-flex items-center justify-center gap-1 rounded-2xl border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 ${busy ? 'opacity-50 cursor-not-allowed' : ''}`}>
                   <Camera size={14} /> PNG
                 </button>
-                <button onClick={handleDownloadAsPdf} className="inline-flex items-center justify-center gap-1 rounded-2xl border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800">
+                <button onClick={handleDownloadAsPdf} disabled={busy} className={`inline-flex items-center justify-center gap-1 rounded-2xl border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 ${busy ? 'opacity-50 cursor-not-allowed' : ''}`}>
                   <FileDown size={14} /> PDF
                 </button>
-                <button onClick={handleDirectPrint} className="inline-flex items-center justify-center gap-1 rounded-2xl border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800">
+                <button onClick={handleDirectPrint} disabled={busy} className={`inline-flex items-center justify-center gap-1 rounded-2xl border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 ${busy ? 'opacity-50 cursor-not-allowed' : ''}`}>
                   <Printer size={14} /> Print
                 </button>
               </div>
