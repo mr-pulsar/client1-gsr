@@ -47,6 +47,7 @@ export default function LabelPage() {
   const [dpi, setDpi] = useState(300);
   const [format, setFormat] = useState('6x4');
   const [message, setMessage] = useState('');
+  const [busy, setBusy] = useState(false);
   const [apiAuthRequired, setApiAuthRequired] = useState(false);
   const previewRef = useRef(null);
 
@@ -123,48 +124,58 @@ export default function LabelPage() {
     }
   };
 
-  const handleDownloadAsJpeg = async () => {
+  const handleDownloadAsJpeg = () => {
     setMessage('');
-    try {
-      await downloadAsJpeg(previewRef, `courier-label-${format}`, { dpi, format });
-      setMessage('JPEG exported');
-    } catch (err) {
-      console.error('JPEG export failed', err);
-      setMessage('JPEG export failed');
-    }
+    if (busy) return;
+    setBusy(true);
+    // schedule heavy work after paint so click handler returns immediately
+    requestAnimationFrame(() => {
+      downloadAsJpeg(previewRef, `courier-label-${format}`, { dpi, format })
+        .then(() => setMessage('JPEG exported'))
+        .catch((err) => { console.error('JPEG export failed', err); setMessage('JPEG export failed'); })
+        .finally(() => setBusy(false));
+    });
   };
 
-  const handleDownloadAsPng = async () => {
+  const handleDownloadAsPng = () => {
     setMessage('');
-    try {
-      await downloadAsPng(previewRef, `courier-label-${format}`, { dpi, format });
-      setMessage('PNG exported');
-    } catch (err) {
-      console.error('PNG export failed', err);
-      setMessage('PNG export failed');
-    }
+    if (busy) return;
+    setBusy(true);
+    requestAnimationFrame(() => {
+      downloadAsPng(previewRef, `courier-label-${format}`, { dpi, format })
+        .then(() => setMessage('PNG exported'))
+        .catch((err) => { console.error('PNG export failed', err); setMessage('PNG export failed'); })
+        .finally(() => setBusy(false));
+    });
   };
 
-  const handleDownloadAsPdf = async () => {
+  const handleDownloadAsPdf = () => {
     setMessage('');
-    try {
-      await downloadAsPdf(previewRef, 'courier-label', { dpi, format });
-      setMessage('PDF exported');
-    } catch (err) {
-      console.error('PDF export failed', err);
-      setMessage('PDF export failed');
-    }
+    if (busy) return;
+    setBusy(true);
+    requestAnimationFrame(() => {
+      downloadAsPdf(previewRef, 'courier-label', { dpi, format })
+        .then(() => setMessage('PDF exported'))
+        .catch((err) => { console.error('PDF export failed', err); setMessage('PDF export failed'); })
+        .finally(() => setBusy(false));
+    });
   };
 
-  const handleDirectPrint = async () => {
+  const handleDirectPrint = () => {
     setMessage('');
-    try {
-      directPrint(previewRef, { format });
-      setMessage('Print dialog opened');
-    } catch (err) {
-      console.error('Print failed', err);
-      setMessage('Print failed');
-    }
+    if (busy) return;
+    setBusy(true);
+    requestAnimationFrame(() => {
+      try {
+        directPrint(previewRef, { format });
+        setMessage('Print dialog opened');
+      } catch (err) {
+        console.error('Print failed', err);
+        setMessage('Print failed');
+      } finally {
+        setBusy(false);
+      }
+    });
   };
 
   const reloadLabel = (label) => {
