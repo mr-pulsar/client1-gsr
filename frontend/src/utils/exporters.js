@@ -1,6 +1,11 @@
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
+// Yield to the browser to allow paint/UI updates before running heavy work
+function yieldToPaint() {
+  return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+}
+
 async function renderToCanvas(node, dpi = 300) {
   const scale = Math.max(1, dpi / 96);
   // Force use of node's full scroll size for accurate rendering
@@ -48,6 +53,8 @@ async function exportImageCanvas(canvas, targetW, targetH, mime = 'image/png', q
 export async function downloadAsPng(ref, filename = 'courier-label', options = { dpi: 300, format: '6x4' }) {
   const node = ref.current;
   const dpi = options.dpi || 300;
+  // allow the browser to paint (button active state / spinner) before heavy work
+  await yieldToPaint();
   const canvas = await renderToCanvas(node, dpi);
 
   let targetW = canvas.width;
@@ -74,6 +81,7 @@ export async function downloadAsPng(ref, filename = 'courier-label', options = {
 export async function downloadAsJpeg(ref, filename = 'courier-label', options = { dpi: 300, format: '6x4' }) {
   const node = ref.current;
   const dpi = options.dpi || 300;
+  await yieldToPaint();
   const canvas = await renderToCanvas(node, dpi);
 
   let targetW = canvas.width;
@@ -95,6 +103,7 @@ export async function downloadAsJpeg(ref, filename = 'courier-label', options = 
 
 export async function downloadAsPdf(ref, filename = 'courier-label', options = { dpi: 300, format: 'a4' }) {
   const node = ref.current;
+  await yieldToPaint();
   const canvas = await renderToCanvas(node, options.dpi);
   const imgData = canvas.toDataURL('image/png');
 
@@ -142,39 +151,42 @@ export async function downloadAsPdf(ref, filename = 'courier-label', options = {
 
 export function directPrint(ref, options = {}) {
   const node = ref.current;
-  // include current document styles so Tailwind classes render in the print window
-  const headStyles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style')).map((n) => n.outerHTML).join('\n');
-  const html = `
-    <html>
-      <head>
-        <title>Print</title>
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        ${headStyles}
-        <style>
-          /* Ensure background colors and gradients are preserved when printing */
-          html,body { margin: 0; font-family: Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-          .print-only { display: block; }
-          /* Make sure the page size is honored for thermal/6x4 labels */
-          @media print { @page { size: ${options.format === 'thermal-80' ? '80mm auto' : (options.format === '6x4' ? '152.4mm 101.6mm' : 'A4')}; margin: 10mm; } }
-        </style>
-      </head>
-      <body>${node.outerHTML}</body>
-    </html>
-  `;
+  // schedule print work after paint so the UI can show feedback immediately
+  requestAnimationFrame(() => {
+    // include current document styles so Tailwind classes render in the print window
+    const headStyles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style')).map((n) => n.outerHTML).join('\n');
+    const html = `
+      <html>
+        <head>
+          <title>Print</title>
+          <meta name="viewport" content="width=device-width,initial-scale=1" />
+          ${headStyles}
+          <style>
+            /* Ensure background colors and gradients are preserved when printing */
+            html,body { margin: 0; font-family: Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .print-only { display: block; }
+            /* Make sure the page size is honored for thermal/6x4 labels */
+            @media print { @page { size: ${options.format === 'thermal-80' ? '80mm auto' : (options.format === '6x4' ? '152.4mm 101.6mm' : 'A4')}; margin: 10mm; } }
+          </style>
+        </head>
+        <body>${node.outerHTML}</body>
+      </html>
+    `;
 
-  const printWindow = window.open('', '_blank', 'width=900,height=1200');
-  if (!printWindow) {
-    console.error('Unable to open print window');
-    return;
-  }
-  printWindow.document.write(html);
-  printWindow.document.close();
-  printWindow.focus();
-  // try to center content and set no margins for thermal printing
-  printWindow.onload = () => {
-    printWindow.document.body.style.display = 'flex';
-    printWindow.document.body.style.alignItems = 'center';
-    printWindow.document.body.style.justifyContent = 'center';
-    printWindow.print();
-  };
+    const printWindow = window.open('', '_blank', 'width=900,height=1200');
+    if (!printWindow) {
+      console.error('Unable to open print window');
+      return;
+    }
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.focus();
+    // try to center content and set no margins for thermal printing
+    printWindow.onload = () => {
+      printWindow.document.body.style.display = 'flex';
+      printWindow.document.body.style.alignItems = 'center';
+      printWindow.document.body.style.justifyContent = 'center';
+      printWindow.print();
+    };
+  });
 }
