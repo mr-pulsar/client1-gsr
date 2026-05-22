@@ -17,7 +17,7 @@ export default function LabelCard({ label, onLoad, onDelete }) {
               <div className="text-[10px] font-semibold uppercase text-slate-400">Customer Phone</div>
               <div className="text-sm font-semibold text-slate-900 dark:text-white">{label.parsedData?.phone || '-'}</div>
             </div>
-            <div className="ml-auto inline-flex rounded-full bg-brand-50 px-2 py-1 text-[10px] font-medium text-brand-700 border border-slate-300 dark:border-slate-700/40 dark:bg-slate-800 dark:text-cyan-300">{label.parsedData?.category ? `Category ${label.parsedData.category}` : ''}</div>
+            {/* category badge removed */}
           </div>
         </button>
         <div className="flex gap-2">

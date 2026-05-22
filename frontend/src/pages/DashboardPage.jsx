@@ -110,7 +110,7 @@ export default function DashboardPage() {
                 <div className="font-semibold text-slate-950 dark:text-white">{label.parsedData?.name || 'Unnamed label'}</div>
                 <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">{label.trackingId}</div>
                 <div className="mt-3 text-sm text-slate-600 dark:text-slate-300">{String(label.parsedData?.address || 'No address available').slice(0, 90)}</div>
-                <div className="mt-3 text-xs text-slate-500 dark:text-slate-400">Category {label.parsedData?.category || '-'}</div>
+                {/* category removed from dashboard recent labels */}
               </div>
             ))
           ) : (

@@ -51,12 +51,7 @@ export default function CourierLabel({ data, trackingId, invoiceId, supportNumbe
       </div>
 
       <div className="space-y-3 p-4">
-        <div className="rounded-lg border-2 border-slate-950 p-1.5 text-center flex items-center justify-center">
-          <div className="flex items-center justify-center w-12 h-12 md:w-12 md:h-12 bg-white rounded-sm shadow-inner border border-red-600">
-            <div className="text-sm md:text-sm font-bold tracking-tight text-red-600 leading-none">{data.category}</div>
-          </div>
-          <div className="sr-only md:not-sr-only md:ml-2 md:text-[10px] uppercase tracking-[0.3em] text-slate-500">Courier Category</div>
-        </div>
+        {/* Category section removed per request - not required for amount */}
 
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Customer Name</div>

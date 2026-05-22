@@ -193,7 +193,7 @@ export default function LabelPage() {
               <div className="text-xs uppercase tracking-[0.4em] text-brand-100">Label generator</div>
               <h2 className="mt-2 text-2xl font-bold text-white">Raw address parser</h2>
             </div>
-            <div className="rounded-2xl bg-red-500/15 px-4 py-2 text-sm font-semibold text-red-200">Category {parsed.category}</div>
+            {/* Category indicator removed - not required */}
           </div>
 
           <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto]">
@@ -231,7 +231,6 @@ export default function LabelPage() {
               ['Pincode', parsed.pincode],
               ['Phone', parsed.phone],
               ['Amount', `₹${parsed.amount}`],
-              ['Category', parsed.category],
             ].map(([label, value]) => (
               <div key={label} className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
                 <div className="text-[11px] uppercase tracking-[0.3em] text-slate-500">{label}</div>
