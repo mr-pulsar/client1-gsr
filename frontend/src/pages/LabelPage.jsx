@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useDeferredValue } from 'react';
 import { Link } from 'react-router-dom';
 import { Camera, FileText, Printer, FileDown, Image as ImageIcon, Search } from 'lucide-react';
 import api from '../services/api';
@@ -50,10 +50,12 @@ export default function LabelPage() {
   const [apiAuthRequired, setApiAuthRequired] = useState(false);
   const previewRef = useRef(null);
 
+  // Defer parsing/preview work so typing in the textarea stays responsive.
+  const deferredRawInput = useDeferredValue(rawInput);
   const parsed = useMemo(() => {
-    const result = parseRawInput(rawInput);
+    const result = parseRawInput(deferredRawInput);
     return { ...result, category: categoryFromAmount(result.amount) };
-  }, [rawInput]);
+  }, [deferredRawInput]);
 
   const refreshLabels = async (query = search) => {
     const localLabels = readLocalLabels();
