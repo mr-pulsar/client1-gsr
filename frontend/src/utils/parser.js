@@ -29,8 +29,8 @@ export function parseRawInput(rawInput) {
     .replace(/ph\s*no\s*[:\-]?/gi, '')
     .replace(/phone\s*[:\-]?/gi, '')
     .replace(/amount\s*[:\-]?/gi, '')
-    .replace(/\b\d{10}\b/g, '')
-    .replace(/\b\d{6}\b/g, '')
+    // Don't globally strip all digit sequences (house numbers can be short).
+    // We'll remove specific extracted phone/pincode values only below.
     .split('\n')
     .map((line) => line.replace(/\s{2,}/g, ' ').trim())
     .filter(Boolean)
@@ -38,7 +38,19 @@ export function parseRawInput(rawInput) {
     .replace(/,\s*,/g, ', ')
     .trim();
 
-  return { name, address, pincode, phone, amount };
+  // Remove exact phone/pincode occurrences from the address only if they were extracted above
+  function escapeRegex(s) {
+    return String(s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+  let cleanedAddress = address;
+  if (phone) {
+    cleanedAddress = cleanedAddress.replace(new RegExp(escapeRegex(phone), 'g'), '').replace(/\s{2,}/g, ' ').trim();
+  }
+  if (pincode) {
+    cleanedAddress = cleanedAddress.replace(new RegExp(escapeRegex(pincode), 'g'), '').replace(/\s{2,}/g, ' ').trim();
+  }
+
+  return { name, address: cleanedAddress, pincode, phone, amount };
 }
 
 export function categoryFromAmount(amount) {
