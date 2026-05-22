@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <title>Redirecting…</title>
+    <script>
+      (function () {
+        // Preserve the attempted path in a query param and redirect to index.html.
+        // The SPA will read ?p= and replace the history entry so routing works.
+        var path = location.pathname + location.search + location.hash;
+        var target = '/?p=' + encodeURIComponent(path);
+        location.replace(target);
+      })();
+    </script>
+  </head>
+  <body>
+    Redirecting...
+  </body>
+</html>
