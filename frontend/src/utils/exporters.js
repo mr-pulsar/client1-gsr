@@ -151,8 +151,10 @@ export function directPrint(ref, options = {}) {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         ${headStyles}
         <style>
-          body { margin: 0; font-family: Arial, sans-serif; }
+          /* Ensure background colors and gradients are preserved when printing */
+          html,body { margin: 0; font-family: Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .print-only { display: block; }
+          /* Make sure the page size is honored for thermal/6x4 labels */
           @media print { @page { size: ${options.format === 'thermal-80' ? '80mm auto' : (options.format === '6x4' ? '152.4mm 101.6mm' : 'A4')}; margin: 10mm; } }
         </style>
       </head>
