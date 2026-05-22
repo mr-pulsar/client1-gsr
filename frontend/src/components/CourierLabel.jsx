@@ -83,13 +83,10 @@ export default function CourierLabel({ data, trackingId, invoiceId, supportNumbe
             <div className="text-xs text-slate-400">{companyName}</div>
           </div>
         </div>
+      </div>
 
-          {/* date moved to colored footer */}
-        </div>
-
-        <div className="rounded-b-md bg-slate-950 px-4 py-2 text-center text-[10px] font-medium uppercase tracking-[0.25em] text-slate-100">
-          Date: {new Date().toLocaleDateString()}
-        </div>
+      <div className="rounded-b-md bg-slate-950 px-4 py-2 text-center text-[10px] font-medium uppercase tracking-[0.25em] text-slate-100">
+        Date: {new Date().toLocaleDateString()}
       </div>
     </div>
   );
