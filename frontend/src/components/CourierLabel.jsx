@@ -36,41 +36,38 @@ export default function CourierLabel({ data, trackingId, invoiceId, supportNumbe
       <div className="rounded-t-md bg-slate-950 px-4 py-3 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-xs uppercase tracking-[0.4em] text-brand-100">{companyName}</div>
-            <div className="mt-1 text-lg font-semibold">HANDLE WITH CARE</div>
+            <div className="flex items-center gap-3">
+              <div className="text-xs uppercase tracking-[0.12em] text-brand-100">{companyName}</div>
+              <div className="text-xs uppercase tracking-[0.12em] text-red-200 font-semibold">HANDLE WITH CARE</div>
+            </div>
           </div>
           <div className="rounded-2xl bg-red-500 px-3 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white">Fragile</div>
         </div>
       </div>
 
-      <div className={`${warningGridClass} border-b border-slate-200 p-3 text-xs font-semibold uppercase tracking-[0.16em] text-red-600`}>
-        <div className="flex items-center gap-2 leading-none min-h-6"><AlertTriangle size={14} className="shrink-0" /> <span>Handle With Care</span></div>
-        <div className="flex items-center gap-2 leading-none min-h-6"><Droplets size={14} className="shrink-0" /> <span>Keep Dry</span></div>
-        <div className="flex items-center gap-2 leading-none min-h-6"><ArrowUp size={14} className="shrink-0" /> <span>This Side Up</span></div>
-        <div className="flex items-center gap-2 leading-none min-h-6"><Package2 size={14} className="shrink-0" /> <span>Courier Ready</span></div>
-      </div>
+      {/* Removed small warning icons (Handle With Care / Keep Dry / This Side Up / Courier Ready) per request */}
 
       <div className="space-y-3 p-4">
         {/* Category section removed per request - not required for amount */}
 
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Customer Name</div>
-          <div className="mt-1 text-lg font-semibold leading-tight break-words">{data.name}</div>
+          <div className="mt-1 text-3xl md:text-4xl font-extrabold leading-tight break-words">{data.name}</div>
         </div>
 
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Address</div>
-          <div className="mt-1 text-base md:text-lg font-semibold leading-tight text-slate-900 whitespace-pre-line">{cleanAddress || data.address}</div>
+          <div className="mt-1 text-2xl md:text-3xl font-bold leading-tight text-slate-900 whitespace-pre-line">{cleanAddress || data.address}</div>
         </div>
 
         <div className="grid grid-cols-2 gap-2 rounded-lg bg-slate-50 p-3">
           <div>
             <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-400">Pincode</div>
-            <div className="mt-1 text-lg font-bold text-slate-900">{data.pincode}</div>
+            <div className="mt-1 text-2xl md:text-3xl font-bold text-slate-900">{data.pincode}</div>
           </div>
           <div>
             <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-400">Customer Phone</div>
-            <div className="mt-1 text-lg font-bold text-slate-900">{data.phone}</div>
+            <div className="mt-1 text-2xl md:text-3xl font-bold text-slate-900">{data.phone}</div>
           </div>
         </div>
 
@@ -85,7 +82,7 @@ export default function CourierLabel({ data, trackingId, invoiceId, supportNumbe
         </div>
       </div>
 
-      <div className="rounded-b-md bg-slate-950 px-4 py-2 text-center text-[10px] font-medium uppercase tracking-[0.25em] text-slate-100">
+      <div className="rounded-b-md bg-slate-950 px-4 py-1 text-center text-[8px] font-medium uppercase tracking-[0.25em] text-slate-100">
         Date: {new Date().toLocaleDateString()}
       </div>
     </div>
