@@ -2,10 +2,10 @@ import { QRCodeSVG } from 'qrcode.react';
 import { AlertTriangle, Droplets, Package2, ArrowUp } from 'lucide-react';
 import BarcodeStrip from './BarcodeStrip';
 
-export default function CourierLabel({ data, trackingId, invoiceId, supportNumber, companyName = 'GSR Graphics', template = 'vertical' }) {
-  const isThermal = template === 'thermal' || template === 'vertical';
+export default function CourierLabel({ data, trackingId, invoiceId, supportNumber, companyName = 'GSR Graphics', template = 'horizontal' }) {
+  const isThermal = template === 'thermal';
   const containerClass = `mx-auto w-full ${isThermal ? 'thermal-label max-w-[360px]' : 'max-w-[720px]'} rounded-md border border-slate-200 bg-white text-slate-950 shadow print:shadow-none label-print-friendly`;
-  const warningGridClass = isThermal ? 'grid grid-cols-1 gap-1' : 'grid grid-cols-2 gap-2';
+  const titleClass = 'text-sm font-bold uppercase tracking-[0.18em] text-slate-700';
 
   // sanitize address to remove any stray amount lines or currency mentions
   const rawAddress = (data?.address || '')?.toString() || '';
@@ -47,32 +47,32 @@ export default function CourierLabel({ data, trackingId, invoiceId, supportNumbe
 
       {/* Removed small warning icons (Handle With Care / Keep Dry / This Side Up / Courier Ready) per request */}
 
-      <div className="space-y-3 p-4">
+      <div className="space-y-4 p-4">
         {/* Category section removed per request - not required for amount */}
 
         <div>
-          <div className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Customer Name</div>
-          <div className="mt-1 text-3xl md:text-4xl font-extrabold leading-tight break-words">{data.name}</div>
+          <div className={titleClass}>Customer Name:</div>
+          <div className="mt-1.5 text-3xl md:text-4xl font-extrabold leading-snug break-words">{data.name}</div>
         </div>
 
-        <div>
-          <div className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Address</div>
-          <div className="mt-1 text-2xl md:text-3xl font-bold leading-tight text-slate-900 whitespace-pre-line">{cleanAddress || data.address}</div>
+        <div className="space-y-1">
+          <div className={titleClass}>Address:</div>
+          <div className="text-2xl md:text-3xl font-bold leading-snug text-slate-900 whitespace-pre-line">{cleanAddress || data.address}</div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 rounded-lg bg-slate-50 p-3">
-          <div>
-            <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-400">Pincode</div>
-            <div className="mt-1 text-2xl md:text-3xl font-bold text-slate-900">{data.pincode}</div>
+        <div className="grid grid-cols-2 gap-3 rounded-lg bg-slate-50 p-3">
+          <div className="space-y-1">
+            <div className={titleClass}>Pincode:</div>
+            <div className="text-2xl md:text-3xl font-bold text-slate-900">{data.pincode}</div>
           </div>
-          <div>
-            <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-400">Customer Phone</div>
-            <div className="mt-1 text-2xl md:text-3xl font-bold text-slate-900">{data.phone}</div>
+          <div className="space-y-1">
+            <div className={titleClass}>Customer Phone:</div>
+            <div className="text-2xl md:text-3xl font-bold text-slate-900">{data.phone}</div>
           </div>
         </div>
 
-        <div className="grid gap-2 rounded-lg border border-slate-200 p-2 md:grid-cols-1">
-          <div className="space-y-1 text-[11px] text-slate-500 flex items-center justify-between">
+        <div className="grid gap-2 rounded-lg border border-slate-200 p-3 md:grid-cols-1">
+          <div className="flex items-center justify-between gap-3 text-[11px] text-slate-500">
             <div>
               <span className="font-semibold text-slate-700">For support (GSR Team):</span>
               <span className="ml-1">{(supportNumber || '').toString().startsWith('+') ? supportNumber : `+91 ${supportNumber}`}</span>

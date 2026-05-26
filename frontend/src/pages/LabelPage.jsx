@@ -43,8 +43,8 @@ export default function LabelPage() {
   const [savedLabel, setSavedLabel] = useState(null);
   const [search, setSearch] = useState('');
   const [logoName, setLogoName] = useState('No logo uploaded');
-  const [template, setTemplate] = useState('vertical');
-  const [dpi, setDpi] = useState(300);
+  const [template, setTemplate] = useState('horizontal');
+  const [dpi, setDpi] = useState(800);
   const [format, setFormat] = useState('6x4');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
@@ -258,8 +258,8 @@ export default function LabelPage() {
               <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-3">
                 <div className="text-xs uppercase text-slate-400">Label Layout</div>
                 <select value={template} onChange={(e) => setTemplate(e.target.value)} className="mt-2 w-full rounded-lg bg-slate-950/60 p-2 text-sm">
-                  <option value="vertical">Vertical (Thermal)</option>
                   <option value="horizontal">Horizontal</option>
+                  <option value="thermal">Thermal 80mm</option>
                 </select>
               </div>
               <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-3">
@@ -267,6 +267,7 @@ export default function LabelPage() {
                 <select value={dpi} onChange={(e) => setDpi(Number(e.target.value))} className="mt-2 w-full rounded-lg bg-slate-950/60 p-2 text-sm">
                   <option value={150}>150 DPI (Fast)</option>
                   <option value={300}>300 DPI (Best)</option>
+                  <option value={800}>800 DPI</option>
                 </select>
               </div>
               <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-3">
@@ -314,7 +315,7 @@ export default function LabelPage() {
                 trackingId={savedLabel?.trackingId || 'TRK-Preview'}
                 invoiceId={savedLabel?.invoiceId || 'INV-Preview'}
                 supportNumber="9025644426"
-                template={template === 'vertical' ? 'thermal' : 'horizontal'}
+                template={template === 'thermal' ? 'thermal' : 'horizontal'}
               />
             </div>
           </div>
